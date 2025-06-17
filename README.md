@@ -4,4 +4,4 @@ Using OpenCV library we need to make a image saving software when movement is de
 
 ---
 **The lab is coded with C++ because from OpenCV version 2.0 upwards there is no C API anymore**. 
-Workaround is to use ``libccv`` (C lib for computer vision), but needs an external library for coms with webcam for ex. ``libucv`` (needs also ``libusb``)
+Workaround is to use ``ccv`` by liuliu (C lib for computer vision), but needs an external library for coms with webcam for ex. ``libucv`` (needs also ``libusb``)
