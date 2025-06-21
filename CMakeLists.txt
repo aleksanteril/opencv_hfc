@@ -30,7 +30,7 @@ include_directories(${OpenCV_INCLUDE_DIRS})
 
 # Create an executable
 
-add_executable(opencv_hfc main.cpp)
+add_executable(opencv_hfc main.cpp dataprocess.cpp camera.cpp)
 
 
 

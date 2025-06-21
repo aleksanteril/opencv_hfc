@@ -1,43 +1,14 @@
-#include <opencv2/core.hpp>
-#include <opencv2/videoio.hpp>
-#include <opencv2/highgui.hpp>
+#include <opencv2/highgui.hpp> //Includes core
+#include "dataprocess.hpp"
+#include "camera.hpp"
 #include <iostream>
 
-
 using namespace cv;
-
-
-
-void init_camera(VideoCapture &cam)
-{
-    int deviceID = 0;             // 0 = open default camera
-    int apiID = cv::CAP_ANY;      // 0 = autodetect default API
-    // open selected camera using selected API
-    std::cout << "Connecting to default cam...\n";
-    cam.open(deviceID, apiID);
-
-    if (!cam.isOpened())
-        throw std::runtime_error("Camera not found!");
-}
-
-
-
-void take_picture(VideoCapture &cam, Mat &frame)
-{   
-    //Grab a frame from the camera
-    std::cout << "Grabbing a picture\n";
-    cam.read(frame);
-
-    if (frame.empty())
-        throw std::runtime_error("Frame is empty!");
-}
-
-
-
 int main(int argc, char** argv )
 {
     //Init class and frames variables
     Mat frames[2];
+    Mat flow; //The calculated flow image
     VideoCapture cap;
 
     //Activate camera
@@ -46,18 +17,17 @@ int main(int argc, char** argv )
     } 
     catch (const std::exception &e) {
         std::cerr << "Exception: " << e.what() << std::endl;
-        return 1;
+        return 1; //Exit if no success
     }
 
-    //Grab a frame from the camera
-    try {
-        take_picture(cap, frames[0]);
-    } 
-    catch (const std::exception &e) {
-        std::cerr << "Exception: " << e.what() << std::endl;
-    }  
-
-    imshow("Display Image", frames[0]);
-    waitKey(0);
+    //Start taking pictures and doing optical flow calculations
+    frames[0] = take_picture(cap);
+    while (waitKey(5) < 0) {
+        frames[1] = take_picture(cap);
+        flow = calc_flow(frames[0], frames[1]);
+        imshow("Screen", visualize_flow(flow));
+        frames[0] = frames[1]; //Move next to prev place
+    } //While
+    
     return 0;
 }
