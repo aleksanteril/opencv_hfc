@@ -4,11 +4,13 @@
 #include <iostream>
 
 using namespace cv;
+
 int main(int argc, char** argv )
 {
     //Init class and frames variables
     Mat frames[2];
     Mat flow; //The calculated flow image
+    double index;
     VideoCapture cap;
 
     //Activate camera
@@ -25,7 +27,9 @@ int main(int argc, char** argv )
     while (waitKey(5) < 0) {
         frames[1] = take_picture(cap);
         flow = calc_flow(frames[0], frames[1]);
-        imshow("Screen", visualize_flow(flow));
+        //imshow("Screen", visualize_flow(flow));
+        index = calc_flow_index(flow);
+        std::cout << index << " index\n";
         frames[0] = frames[1]; //Move next to prev place
     } //While
     

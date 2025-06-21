@@ -5,7 +5,7 @@
 using namespace cv;
 
 // For visualising the data mainly for testing!
-Mat visualize_flow(Mat &flow)
+Mat visualize_flow(const Mat &flow)
 {
     // visualization
     Mat flow_parts[2];
@@ -27,14 +27,25 @@ Mat visualize_flow(Mat &flow)
     return bgr;
 }
 
-Mat calc_flow(Mat &frame1, Mat &frame2)
+Mat calc_flow(const Mat &frame1, const Mat &frame2)
 {
     Mat next;
     Mat prev;
     cvtColor(frame1, prev, COLOR_BGR2GRAY);
     cvtColor(frame2, next, COLOR_BGR2GRAY);
 
-    Mat flow(prev.size(), CV_32FC2);
+    Mat flow;
     calcOpticalFlowFarneback(prev, next, flow, 0.5, 3, 15, 3, 5, 1.2, 0);
     return flow;
+}
+
+
+double calc_flow_index(const Mat &flow)
+{
+    Mat flow_parts[2];
+    Mat vectors;
+    split(flow, flow_parts);
+    magnitude(flow_parts[0], flow_parts[1], vectors);
+    double index = mean(vectors)[0];
+    return index;
 }
