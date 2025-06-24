@@ -5,6 +5,7 @@
 
 //To develop:
 // - image save filepath taken as a program argument from cmd!
+// - a way less images are saved like a buffer when last pic was saved
 
 using namespace cv;
 int main(int argc, char** argv )
@@ -28,13 +29,12 @@ int main(int argc, char** argv )
     //Start taking pictures and doing optical flow calculations
     int i = 0;
     frames[0] = take_picture(cap);
-    while (1) {
-
-        waitKey(10); //Used as a delay for picture capping
+    while (waitKey(10) < 0) {
         frames[1] = take_picture(cap);
 
         //Run the farneback flow algorithm to get flow image
         flow = calc_flow(frames[0], frames[1]);
+        imshow("screen", visualize_flow(flow));
 
         //Calculate the flow index from the flow image
         index[i] = calc_flow_index(flow);
