@@ -1,6 +1,8 @@
 #include <opencv2/video.hpp>
 #include <opencv2/imgproc.hpp>
+#include <opencv2/imgcodecs.hpp>
 #include "dataprocess.hpp"
+#include <ctime>
 
 using namespace cv;
 
@@ -48,4 +50,24 @@ double calc_flow_index(const Mat &flow)
     magnitude(flow_parts[0], flow_parts[1], vectors);
     double index = mean(vectors)[0];
     return index;
+}
+
+
+void save_image(Mat &frame)
+{
+    time_t stamp;
+    time(&stamp);
+    //A variable can be used here for getting the correct directory
+    String filepath = "C:/Users/aleks/Pictures/";
+    String filename = filepath + "intruder_" + std::to_string(stamp) + ".jpg";
+    imwrite(filename , frame);
+}
+
+
+double mean(double array[], int length)
+{
+    double sum = 0;
+    for (int i = 0; i < length; i++)
+        sum += array[i];
+    return sum / length;
 }
